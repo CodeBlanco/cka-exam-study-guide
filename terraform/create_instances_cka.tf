@@ -1,3 +1,43 @@
+
+
+
+resource "aws_security_group" "instance_sg" {
+  name        = "instance_sg"
+  description = "Allow inbound traffic"
+
+  # Allow all internal traffic between instances within this SG
+  ingress {
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "tcp"
+    security_groups = [self.id]
+  }
+
+  ingress {
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "udp"
+    security_groups = [self.id]
+  }
+
+  # Allow SSH from anywhere for management
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # Allow all outbound traffic
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+
 resource "aws_instance" "example" {
   count = var.instance_count  # Define 'instance_count' variable to specify the number of instances
 
@@ -5,7 +45,7 @@ resource "aws_instance" "example" {
   instance_type = "t2.medium"
   key_name      = "cka"
 
-  user_data = <<-EOF
+  user_data = <<EOFF
 #!/bin/bash
 
 # Logging function for debugging
@@ -109,7 +149,7 @@ sudo systemctl enable --now kubelet
 
 # End of the user-data script
 log "Finished user-data script."
-              EOF
+              EOFF
 
   vpc_security_group_ids = [aws_security_group.instance_sg.id]
 
