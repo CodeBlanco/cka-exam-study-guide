@@ -1,24 +1,12 @@
-
-
+variable "instance_count" {
+  description = "The number of instances to create"
+  default     = 1
+  type        = number
+}
 
 resource "aws_security_group" "instance_sg" {
   name        = "instance_sg"
   description = "Allow inbound traffic"
-
-  # Allow all internal traffic between instances within this SG
-  ingress {
-    from_port   = 0
-    to_port     = 65535
-    protocol    = "tcp"
-    source_security_group_id = aws_security_group.instance_sg.id
-  }
-
-  ingress {
-    from_port   = 0
-    to_port     = 65535
-    protocol    = "udp"
-    source_security_group_id = aws_security_group.instance_sg.id
-  }
 
   # Allow SSH from anywhere for management
   ingress {
@@ -62,7 +50,7 @@ mkdir -p /home/ec2-user/.ssh/
 if [ ! -f /home/ec2-user/.ssh/id_ed25519 ]; then
     log "Creating the private key."
     cat << EOF > /home/ec2-user/.ssh/id_ed25519
-# ... [Your private key here]
+# PUT PRIVATE KEY HERE
 EOF
 else
     log "Private key already exists, skipping creation."
@@ -74,6 +62,13 @@ chmod 600 /home/ec2-user/.ssh/id_ed25519
 # Generating the public key from the private key
 log "Generating the public key from the private key."
 ssh-keygen -y -f /home/ec2-user/.ssh/id_ed25519 > /home/ec2-user/.ssh/id_ed25519.pub
+
+# Links to containerd packages
+CONTAINERD=https://github.com/containerd/containerd/releases/download/v1.6.24/containerd-1.6.24-linux-amd64.tar.gz
+SYSTEMCTL_CONTAINERD=https://raw.githubusercontent.com/containerd/containerd/main/containerd.service
+RUNC=https://github.com/opencontainers/runc/releases/download/v1.1.9/runc.amd64
+NETWORK_PLUGIN=https://github.com/containernetworking/plugins/releases/download/v1.3.0/cni-plugins-linux-amd64-v1.3.0.tgz
+
 
 # Installing containerd
 log "Installing containerd."
