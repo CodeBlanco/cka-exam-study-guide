@@ -10,14 +10,14 @@ resource "aws_security_group" "instance_sg" {
     from_port   = 0
     to_port     = 65535
     protocol    = "tcp"
-    security_groups = [self.id]
+    source_security_group_id = aws_security_group.instance_sg.id
   }
 
   ingress {
     from_port   = 0
     to_port     = 65535
     protocol    = "udp"
-    security_groups = [self.id]
+    source_security_group_id = aws_security_group.instance_sg.id
   }
 
   # Allow SSH from anywhere for management
