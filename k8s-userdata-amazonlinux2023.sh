@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Run the command below to create the control plane
+# kubeadm init ....
+
 # Logging function for debugging
 log() {
     echo "$(date) - $1" >> /tmp/userdata.log
@@ -49,6 +52,10 @@ log "Installing and configuring network plugin."
 mkdir -p /opt/cni/bin
 wget $NETWORK_PLUGIN 
 tar -C /opt/cni/bin/ -xzvf `basename $NETWORK_PLUGIN`
+
+# Configuring Cgroup for containerd
+containerd config default | sed "s/SystemdCgroup\ =\ false/SystemdCgroup\ =\ true/" > /etc/containerd/config.toml
+
 
 # Pre-flight checks
 log "Starting pre-flight checks."
