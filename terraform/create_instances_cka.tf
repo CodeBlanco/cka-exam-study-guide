@@ -29,7 +29,7 @@ resource "aws_security_group" "instance_sg" {
 resource "aws_instance" "example" {
   count = var.instance_count  # Define 'instance_count' variable to specify the number of instances
 
-  ami           = "ami-03a6eaae9938c858c"  
+  ami           = "ami-05af0694d2e8e6df3"  
   instance_type = "t2.medium"
   key_name      = "cka"
 
