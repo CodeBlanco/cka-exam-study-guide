@@ -34,7 +34,7 @@ jobs:
     - name: Terraform Plan
       run: |
         cd terraform
-        TF_LOG=DEBUG plan \
+        TF_LOG=DEBUG terraform plan \
         -var="instance_count=${{ github.event.inputs.num_of_instances }}" \
         -var="user_data_secret=${{ secrets.USER_DATA_SECRET }}" \
         -var="aws_access_key=${{ secrets.AWS_ACCESS_KEY_ID }}" \
