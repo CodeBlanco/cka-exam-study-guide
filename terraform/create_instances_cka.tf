@@ -1,3 +1,10 @@
+provider "aws" {
+  access_key = var.AWS_ACCESS_KEY_ID
+  secret_key = var.AWS_SECRET_ACCESS_KEY
+  region     = var.AWS_DEFAULT_REGION
+}
+
+
 variable "instance_count" {
   description = "The number of instances to create"
   default     = 1
