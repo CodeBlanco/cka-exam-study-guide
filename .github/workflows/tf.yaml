@@ -22,11 +22,9 @@ jobs:
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        USER_DATA_SECRET: ${{ secrets.USER_DATA_SECRET }}
       run: |
         echo "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" >> $GITHUB_ENV
         echo "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" >> $GITHUB_ENV
-        echo "USER_DATA_SECRET=$USER_DATA_SECRET" >> $GITHUB_ENV
         # You can use the TERRAFORM_PRIVATE_KEY directly in terraform commands or other places in the script as needed.
 
     - name: Terraform Init
@@ -42,4 +40,4 @@ jobs:
     - name: Terraform Apply
       run: |
         cd terraform
-        terraform apply -auto-approve -var="instance_count=${{ github.event.inputs.num_of_instances }}" -var="user_data_secret=$USER_DATA_SECRET"
+        terraform apply -auto-approve -var="instance_count=${{ github.event.inputs.num_of_instances }}" -var="user_data_secret=${{ secrets.USER_DATA_SECRET }}"
