@@ -31,6 +31,7 @@ jobs:
       run: |
         cd terraform
         terraform init
+        terraform destroy
     - name: Terraform Plan
       run: |
         cd terraform
