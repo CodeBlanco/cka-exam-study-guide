@@ -3,6 +3,10 @@ name: Manual Terraform Action
 on:
   workflow_dispatch:
     inputs:
+      action:
+        description: 'Action (apply/destroy)'
+        required: true
+        default: 'apply'
       num_of_instances:
         description: 'Number of instances'
         required: true
@@ -31,8 +35,21 @@ jobs:
       run: |
         cd terraform
         terraform init
-        terraform destroy
+
+    - name: Terraform Destroy
+      if: github.event.inputs.action == 'destroy'
+      run: |
+        cd terraform
+        TF_LOG=DEBUG terraform destroy -auto-approve \
+        -var="instance_count=${{ github.event.inputs.num_of_instances }}" \
+        -var="user_data_secret=${{ secrets.USER_DATA_SECRET }}" \
+        -var="aws_access_key_id=${{ secrets.AWS_ACCESS_KEY_ID }}" \
+        -var="aws_secret_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
+        -var="aws_region=us-west-1" # Change this to your desired region or use another secret/environment variable
+
+        
     - name: Terraform Plan
+      if: github.event.inputs.action == 'apply'
       run: |
         cd terraform
         TF_LOG=DEBUG terraform plan \
@@ -43,6 +60,7 @@ jobs:
         -var="aws_region=us-west-1" # Change this to your desired region or use another secret/environment variable
 
     - name: Terraform Apply
+      if: github.event.inputs.action == 'apply'
       run: |
         cd terraform
         terraform apply -auto-approve \
