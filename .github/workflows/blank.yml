@@ -1,0 +1,45 @@
+name: Manual Terraform Action
+
+on:
+  workflow_dispatch:
+    inputs:
+      num_of_instances:
+        description: 'Number of instances'
+        required: true
+        default: '3'
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+
+    - name: Configure Terraform AWS Credentials
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        USER_DATA_SECRET: ${{ secrets.USER_DATA_SECRET }}
+      run: |
+        echo "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" >> $GITHUB_ENV
+        echo "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" >> $GITHUB_ENV
+        echo "USER_DATA_SECRET=$USER_DATA_SECRET" >> $GITHUB_ENV
+        # You can use the TERRAFORM_PRIVATE_KEY directly in terraform commands or other places in the script as needed.
+
+    - name: Terraform Init
+      run: |
+        cd terraform
+        terraform init
+        
+    - name: Terraform Plan
+      run: |
+        cd terraform
+        terraform plan -var="instance_count=${{ github.event.inputs.num_of_instances }}"
+    
+    - name: Terraform Apply
+      run: |
+        cd terraform
+        terraform apply -auto-approve -var="instance_count=${{ github.event.inputs.num_of_instances }}" -var="user_data_secret=$USER_DATA_SECRET"
