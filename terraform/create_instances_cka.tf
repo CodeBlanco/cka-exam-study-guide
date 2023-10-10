@@ -1,9 +1,25 @@
+variable "AWS_ACCESS_KEY_ID" {
+  description = "AWS Access Key"
+  type        = string
+}
+
+variable "AWS_SECRET_ACCESS_KEY" {
+  description = "AWS Secret Key"
+  type        = string
+  sensitive   = true
+}
+
+variable "AWS_DEFAULT_REGION" {
+  description = "AWS Region"
+  type        = string
+  default     = "us-west-1"  # Set a default region or remove the default attribute if you want it to be explicitly specified every time
+}
+
 provider "aws" {
   access_key = var.AWS_ACCESS_KEY_ID
   secret_key = var.AWS_SECRET_ACCESS_KEY
   region     = var.AWS_DEFAULT_REGION
 }
-
 
 variable "instance_count" {
   description = "The number of instances to create"
