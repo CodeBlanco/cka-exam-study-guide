@@ -4,6 +4,13 @@ variable "instance_count" {
   type        = number
 }
 
+variable "user_data_secret" {
+  description = "The secret for user data"
+  type        = string
+  sensitive   = true
+}
+
+
 resource "aws_security_group" "instance_sg" {
   name        = "instance_sg"
   description = "Allow inbound traffic"
@@ -49,9 +56,7 @@ log "Ensuring .ssh directory exists for EC2 user."
 mkdir -p /home/ec2-user/.ssh/
 if [ ! -f /home/ec2-user/.ssh/id_ed25519 ]; then
     log "Creating the private key."
-    cat << EOF > /home/ec2-user/.ssh/id_ed25519
-# PUT PRIVATE KEY HERE
-EOF
+    echo ${user_data_secret} > /home/ec2-user/.ssh/id_ed25519
 else
     log "Private key already exists, skipping creation."
 fi
@@ -59,11 +64,13 @@ fi
 # Generating the public key from the private key
 log "Generating the public key from the private key."
 ssh-keygen -y -f /home/ec2-user/.ssh/id_ed25519 > /home/ec2-user/.ssh/id_ed25519.pub
+cat /home/ec2-user/.ssh/id_ed25519.pub >> /home/ec2-user/.ssh/authorized_keys
 
 
 log "Setting ownership and permissions for private key."
 chown -R ec2-user:ec2-user /home/ec2-user/.ssh/
-chmod -R 600 /home/ec2-user/.ssh/
+chmod -R 700 /home/ec2-user/.ssh
+chmod 600 /home/ec2-user/.ssh/authorized_keys
 
 # Links to containerd packages
 CONTAINERD=https://github.com/containerd/containerd/releases/download/v1.6.24/containerd-1.6.24-linux-amd64.tar.gz
