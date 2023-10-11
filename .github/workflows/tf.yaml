@@ -47,6 +47,11 @@ jobs:
         -var="aws_secret_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
         -var="aws_region=us-west-1" # Change this to your desired region or use another secret/environment variable
 
+        git config user.name "GitHub Action"
+        git config user.email "action@github.com"
+        git add terraform.tfstate *.tf # Adds only the state file and .tf files.
+        git commit -m"terraform files"
+        git push
         
     - name: Terraform Plan
       if: github.event.inputs.action == 'apply' || github.event.inputs.action == 'plan'
