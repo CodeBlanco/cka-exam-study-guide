@@ -79,7 +79,8 @@ log "Ensuring .ssh directory exists for EC2 user."
 mkdir -p /home/ec2-user/.ssh/
 if [ ! -f /home/ec2-user/.ssh/id_ed25519 ]; then
     log "Creating the private key."
-    echo ${var.user_data_secret} > /home/ec2-user/.ssh/id_ed25519
+    log "Value of user_data_secret: ${var.user_data_secret}"
+    echo "${var.user_data_secret}" > /home/ec2-user/.ssh/id_ed25519
 else
     log "Private key already exists, skipping creation."
 fi
