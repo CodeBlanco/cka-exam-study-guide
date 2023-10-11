@@ -71,6 +71,8 @@ log() {
     echo "$(date) - $1" >> /tmp/userdata.log
 }
 
+exec > >(tee -a /tmp/userdata.log) 2>&1 # redirect all output to userdata.log file
+
 # Start of the user-data script
 log "Starting user-data script."
 
