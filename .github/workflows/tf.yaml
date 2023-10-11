@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       action:
-        description: 'Action (apply/destroy)'
+        description: 'Action (apply/destroy/plan)'
         required: true
-        default: 'apply'
+        default: 'plan'
       num_of_instances:
         description: 'Number of instances'
         required: true
@@ -49,7 +49,7 @@ jobs:
 
         
     - name: Terraform Plan
-      if: github.event.inputs.action == 'apply'
+      if: github.event.inputs.action == 'apply' || github.event.inputs.action == "plan"
       run: |
         cd terraform
         TF_LOG=DEBUG terraform plan \
