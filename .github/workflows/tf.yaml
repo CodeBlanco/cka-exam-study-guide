@@ -51,7 +51,7 @@ jobs:
         git config user.email "action@github.com"
         git add terraform.tfstate *.tf # Adds only the state file and .tf files.
         git commit -m"terraform files"
-        git push
+        git push || true
         
     - name: Terraform Plan
       if: github.event.inputs.action == 'apply' || github.event.inputs.action == 'plan'
@@ -79,4 +79,4 @@ jobs:
         git config user.email "action@github.com"
         git add terraform.tfstate *.tf # Adds only the state file and .tf files.
         git commit -m"terraform files"
-        git push
+        git push || true
