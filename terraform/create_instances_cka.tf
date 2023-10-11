@@ -87,17 +87,16 @@ else
     log "Private key already exists, skipping creation."
 fi
 
+log "Setting ownership and permissions for private key."
+chown -R ec2-user:ec2-user /home/ec2-user/.ssh/
+chmod -R 700 /home/ec2-user/.ssh
+chmod 600 /home/ec2-user/.ssh/authorized_keys
+
 # Generating the public key from the private key
 log "Generating the public key from the private key."
 sudo yum install -y openssh-keygen
 ssh-keygen -y -f /home/ec2-user/.ssh/id_ed25519 > /home/ec2-user/.ssh/id_ed25519.pub
 cat /home/ec2-user/.ssh/id_ed25519.pub >> /home/ec2-user/.ssh/authorized_keys
-
-
-log "Setting ownership and permissions for private key."
-chown -R ec2-user:ec2-user /home/ec2-user/.ssh/
-chmod -R 700 /home/ec2-user/.ssh
-chmod 600 /home/ec2-user/.ssh/authorized_keys
 
 # Links to containerd packages
 CONTAINERD=https://github.com/containerd/containerd/releases/download/v1.6.24/containerd-1.6.24-linux-amd64.tar.gz
