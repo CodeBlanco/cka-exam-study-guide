@@ -64,9 +64,9 @@ resource "aws_instance" "example" {
   key_name      = "cka"
  
   ebs_block_device {
-    device_name = "/dev/sda1"
+    device_name = "/dev/xvda"
     volume_size = 32
-    volume_type = "gp2"
+    volume_type = "gp3"
     delete_on_termination = true
   }
   
