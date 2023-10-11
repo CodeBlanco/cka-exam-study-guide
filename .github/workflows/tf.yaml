@@ -49,7 +49,7 @@ jobs:
 
         
     - name: Terraform Plan
-      if: github.event.inputs.action == 'apply' || github.event.inputs.action == "plan"
+      if: github.event.inputs.action == 'apply' || github.event.inputs.action == 'plan'
       run: |
         cd terraform
         TF_LOG=DEBUG terraform plan \
