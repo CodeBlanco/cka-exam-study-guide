@@ -87,6 +87,7 @@ fi
 
 # Generating the public key from the private key
 log "Generating the public key from the private key."
+sudo yum install -y openssh-keygen
 ssh-keygen -y -f /home/ec2-user/.ssh/id_ed25519 > /home/ec2-user/.ssh/id_ed25519.pub
 cat /home/ec2-user/.ssh/id_ed25519.pub >> /home/ec2-user/.ssh/authorized_keys
 
