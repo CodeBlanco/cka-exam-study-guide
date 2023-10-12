@@ -1,3 +1,23 @@
+# CKA
+The point of this repo is to be a study guide to pass the CKA exam.
+
+## Quick Commands
+
+
+
+### Ingress Class
+
+- Ingress controllers usually come with ingress classes. You should not have to install one on CKA. You may need to use one.
+
+```
+kubectl get ingressClasses
+```
+
+- List each ingress and the corresponding ingress class
+```
+kubectl get ingress -A
+```
+
 # ec2-userdata-ssh
 This user data script allows you to setup ssh access between your containers
 
