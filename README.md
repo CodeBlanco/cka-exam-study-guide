@@ -3,17 +3,38 @@ The point of this repo is to be a study guide to pass the CKA exam.
 
 ## Quick Commands
 
+### Nodes
+
+Schedule a Pod to a Node
+```
+kubectl label nodes <node-name> size=large
+
+kubectl run my-pod --image=my-image --overrides='{
+  "spec": {
+    "nodeSelector": {
+      "size": "large"
+    }
+  }
+}'
+```
+
+
+### General Commands
+
+List all resorces that support get or describe (list)
+```
+kubectl api-resources --verbs=list,get
+```
 
 
 ### Ingress Class
 
-- Ingress controllers usually come with ingress classes. You should not have to install one on CKA. You may need to use one.
-
+Ingress controllers usually come with ingress classes. You should not have to install one on CKA. You may need to use one.
 ```
 kubectl get ingressClasses
 ```
 
-- List each ingress and the corresponding ingress class
+List each ingress and the corresponding ingress class
 ```
 kubectl get ingress -A
 ```
