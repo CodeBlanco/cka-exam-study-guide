@@ -3,6 +3,13 @@ The point of this repo is to be a study guide to pass the CKA exam.
 
 ## Quick Commands
 
+### Services
+
+Expose a pod
+```
+kubectl expose pod <POD_NAME> --name=<SERVICE_NAME> --port=80 --type=ClusterIP
+```
+
 ### Nodes
 
 Schedule a Pod to a Node
@@ -17,6 +24,8 @@ kubectl run my-pod --image=my-image --overrides='{
   }
 }'
 ```
+
+Taints and Tolerations, then Affinities are two other ways you can assign pods to nodes, however, nodeSelector seems the most straight-forward. 
 
 
 ### General Commands
