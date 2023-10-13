@@ -25,7 +25,6 @@ spec:
     ports:
     - name: http
       containerPort: 8080
-
 ---
 
 kubectl expose pod <POD_NAME> --name=<SERVICE_NAME> --port=80 --target-port=http --type=ClusterIP
@@ -54,6 +53,48 @@ Taints and Tolerations, then Affinities are two other ways you can assign pods t
 List all resorces that support get or describe (list)
 ```
 kubectl api-resources --verbs=list,get
+```
+
+### Ingress
+
+Create a template
+```
+kubectl create ingress simple-ingress --rule="myapp.example.com/=my-service:http-port" --dry-run=client -o yaml > simple-ingress.yaml
+```
+
+If a service names a port, an ingress can use its name. Note that the targetPort requires the pod to have the port named.
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service
+spec:
+  selector:
+    app: my-app
+  ports:
+  - name: http-port
+    port: 80
+    targetPort: http-port
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: simple-ingress
+spec:
+  rules:
+  - host: myapp.example.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: my-service
+            port:
+              name: http-port
+
 ```
 
 
