@@ -42,6 +42,12 @@ systemctl status containerd # or whatever container run time
 journalctl -u containerd 
 ```
 
+Create a pod, have it do one thing, then go away...
+In this case it does nslookup on a pod name.
+```
+kubectl run -it --rm --restart=Never busybox --image=busybox -- nslookup kubernetes.default
+```
+
 Events tell you what happened.
 
 ```
@@ -50,13 +56,19 @@ kubectl get events -n ns
 
 See the hardware specs for a node (conditions are checks for Ready status)
 ```
-kubectl describe nodes | grep -A5 Allocatable # "Conditions" is another good search term
+kubectl describe nodes | grep -A5 Allocatable # "Conditions" is another good search term+
+# you can also use "Taint" as search term
 ```
-
+### Top
 Top is a classic command
 ```
 kubectl top nodes
 kubectl top pods -n ns
+```
+
+```
+kubectl top pods --sort-by=cpu
+kubectl top nodes --sort-by=memory
 ```
 
 Check networkpolicies
