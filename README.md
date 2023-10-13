@@ -54,10 +54,14 @@ kubectl run -it --rm --restart=Never busybox --image=busybox -- nslookup kuberne
 ```
 
 Events tell you what happened.
+```
+# List Events sorted by timestamp
+kubectl get events --sort-by=.metadata.creationTimestamp
+# List all warning events
+kubectl events --types=Warning
+```
 
-```
-kubectl get events -n ns
-```
+
 
 See the hardware specs for a node (conditions are checks for Ready status)
 ```
@@ -99,6 +103,19 @@ kubectl get pvc -A
 It is always good to look at config files and secret configurations
 ```
 kubectl get configmaps, secrets -n ns
+```
+
+### Labels and Select
+
+```
+# Show labels for all pods (or any other Kubernetes object that supports labelling)
+kubectl get pods --show-labels
+```
+
+```
+# Get the version label of all pods with label app=cassandra
+kubectl get pods --selector=app=cassandra -o \
+  jsonpath='{.items[*].metadata.labels.version}'
 ```
 
 ## Services
