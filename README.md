@@ -9,8 +9,26 @@ Expose a pod
 ```
 kubectl expose pod <POD_NAME> --name=<SERVICE_NAME> --port=80 --target-port=8080 --type=ClusterIP
 # target port is the container app port
+# You can use NodePort for type etc
+```
 
+Using a named port
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+spec:
+  containers:
+  - name: my-container
+    image: my-image
+    ports:
+    - name: http
+      containerPort: 8080
 
+---
+
+kubectl expose pod <POD_NAME> --name=<SERVICE_NAME> --port=80 --target-port=http --type=ClusterIP
 ```
 
 ### Nodes
