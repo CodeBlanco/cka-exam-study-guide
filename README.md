@@ -1,5 +1,21 @@
-# CKA
-The point of this repo is to be a study guide to pass the CKA exam.
+# What is this?
+This repository was created to aid passing the CKA exam. It utilizes many technologies
+- Terraform
+- AWS
+- Linux
+- Kubeadm
+- kubelet
+- containerd
+- Github Actions
+
+
+Basically, there is a Github Action Pipeline that can apply/plan/destroy AWS instances. The instances all have containerd, kubeadm, and some network configs. The automation intentionally stops here because this is similar to the CKA exam environment. 
+
+So after the pipeline creates the instances, you SSH in, create a cluster, join some nodes, practice some kubernetes, pass the CKA exam. 
+
+The yaml files in the `templates` directory are examples meant to be practiced for the exam. Below are some handy commands.
+
+
 
 ## Quick Commands
 
