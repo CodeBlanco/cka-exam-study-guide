@@ -19,6 +19,13 @@ The yaml files in the `templates` directory are examples meant to be practiced f
 
 ## Quick Commands
 
+## Config
+
+Get the current context.
+```
+kubectl config current-context
+```
+
 ### Troubleshoot
 
 Below is a quickstart of simple commands
