@@ -23,6 +23,11 @@ Get the current context.
 kubectl config current-context
 ```
 
+Get a list of users
+```
+kubectl config view -o jsonpath='{.users[*].name}'
+```
+
 ## Troubleshoot
 
 List all resorces that support get or describe (list)
