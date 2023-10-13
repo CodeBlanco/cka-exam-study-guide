@@ -16,9 +16,6 @@ So after the pipeline creates the instances, you SSH in, create a cluster, join 
 The yaml files in the `templates` directory are examples meant to be practiced for the exam. Below are some handy commands.
 
 
-
-## Quick Commands
-
 ## Config
 
 Get the current context.
@@ -26,7 +23,12 @@ Get the current context.
 kubectl config current-context
 ```
 
-### Troubleshoot
+## Troubleshoot
+
+List all resorces that support get or describe (list)
+```
+kubectl api-resources --verbs=list,get
+```
 
 Below is a quickstart of simple commands
 ```
@@ -82,7 +84,7 @@ It is always good to look at config files and secret configurations
 kubectl get configmaps, secrets -n ns
 ```
 
-### Services
+## Services
 
 Expose a pod
 ```
@@ -109,7 +111,7 @@ spec:
 kubectl expose pod <POD_NAME> --name=<SERVICE_NAME> --port=80 --target-port=http --type=ClusterIP
 ```
 
-### Nodes
+## Nodes
 
 Schedule a Pod to a Node
 ```
@@ -127,14 +129,8 @@ kubectl run my-pod --image=my-image --port=80 --overrides='{
 Taints and Tolerations, then Affinities are two other ways you can assign pods to nodes, however, nodeSelector seems the most straight-forward. 
 
 
-### General Commands
 
-List all resorces that support get or describe (list)
-```
-kubectl api-resources --verbs=list,get
-```
-
-### Ingress
+## Ingress
 
 Create a template
 ```
