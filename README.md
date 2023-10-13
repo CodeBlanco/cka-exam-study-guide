@@ -19,6 +19,62 @@ The yaml files in the `templates` directory are examples meant to be practiced f
 
 ## Quick Commands
 
+### Troubleshoot
+
+Below is a quickstart of simple commands
+```
+kubectl get nodes
+kubectl get <pods, svc, deployments, ....> -A -o wide
+kubectl describe <pod,node,deployment> -n ns # look for conditions to see why it did not start
+kubectl logs <pod> -n ns
+systemctl status kubelet
+journalctl -u kubelet
+systemctl status containerd # or whatever container run time
+journalctl -u containerd 
+```
+
+Events tell you what happened.
+
+```
+kubectl get events -n ns
+```
+
+See the hardware specs for a node (conditions are checks for Ready status)
+```
+kubectl describe nodes | grep -A5 Allocatable # "Conditions" is another good search term
+```
+
+Top is a classic command
+```
+kubectl top nodes
+kubectl top pods -n ns
+```
+
+Check networkpolicies
+```
+kubectl get networkpolicies -n ns
+```
+
+Logs, remember to specify container if two exists.
+```
+kubectl logs <pod-name> -c <init-container-name> -n ns
+```
+
+Exec commands in a container
+```
+kubectl exec -it <pod-name> -n ns -- wget -O- svcname # or ip
+```
+
+Do not forget to check on your storage options!
+```
+kubectl get pvc -A
+```
+
+It is always good to look at config files and secret configurations
+```
+kubectl get configmaps, secrets -n ns
+```
+
 ### Services
 
 Expose a pod
