@@ -7,7 +7,10 @@ The point of this repo is to be a study guide to pass the CKA exam.
 
 Expose a pod
 ```
-kubectl expose pod <POD_NAME> --name=<SERVICE_NAME> --port=80 --type=ClusterIP
+kubectl expose pod <POD_NAME> --name=<SERVICE_NAME> --port=80 --target-port=8080 --type=ClusterIP
+# target port is the container app port
+
+
 ```
 
 ### Nodes
@@ -16,7 +19,7 @@ Schedule a Pod to a Node
 ```
 kubectl label nodes <node-name> size=large
 
-kubectl run my-pod --image=my-image --overrides='{
+kubectl run my-pod --image=my-image --port=80 --overrides='{
   "spec": {
     "nodeSelector": {
       "size": "large"
