@@ -153,6 +153,8 @@ spec:
 kubectl expose pod <POD_NAME> --name=<SERVICE_NAME> --port=80 --target-port=http --type=ClusterIP
 ```
 
+- Nodeport can be accessed by the provisioned service ip from any node on the cluster (just get the node port).
+
 ## Nodes
 
 Schedule a Pod to a Node
