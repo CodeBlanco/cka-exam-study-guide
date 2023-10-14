@@ -306,5 +306,65 @@ k get svc # get the port
 curl <NODE_IP>:<NODE_PORT> # you can see the web page
 ```
 
+## RBAC
+
+### New User
+
+This was done with minikube for the purpose of practiving RBAC
+```
+mkdir -p /home/ec2-user/user2
+cd /home/ec2-user/user2
+
+# Create private key
+openssl genpkey -algorithm RSA -out user2.key
+
+# CN is username and O is group
+# Createa a Cert Signature Request (.csr) that contains your public key and user info
+openssl req -new -key user2.key -out user2.csr -subj "/CN=user2/O=group2"
+
+# Sign the request with the minikube private key and certificate. This will produce a new cert (user2.crt)
+# note these are default locations for minikube keys
+openssl x509 -req -in user2.csr -CA ~/.minikube/ca.crt -CAkey ~/.minikube/ca.key -CAcreateserial -out user2.crt -days 365
+
+# Configure kubectl for the new user
+kubectl config set-credentials user2 --client-certificate=/home/ec2-user/user2/user2.crt --client-key=/home/ec2-user/user2/user2.key
+
+# Configure context
+kubectl config set-context user2-context --cluster=minikube --user=user2
+
+# Switch to new user (commands below wont work as this user, you will have to switch back to minikube user)
+kubectl config use-context user2-context
+```
+
+### Role + Role Binding
+
+```
+kubectl create namespace public
+```
+
+```
+kubectl create role pod-reader-writer --namespace=public \
+  --verb=get,list,watch,create,delete,update,patch \
+  --resource=pods
+```
+
+```
+kubectl create rolebinding read-write-public-pods --namespace=public \
+  --role=pod-reader-writer \
+  --user=user2
+```
+
+### ClusterRole + Cluster Role Binding
+
+```
+kubectl create clusterrole pod-reader --verb=get,list,watch --resource=pods
+```
+
+```
+kubectl create clusterrolebinding read-all-pods --clusterrole=pod-reader --user=user2
+```
+
+### RBAC
+
 
 
