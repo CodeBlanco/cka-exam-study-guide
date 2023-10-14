@@ -59,6 +59,11 @@ In this case it does nslookup on a pod name.
 kubectl run -it --rm --restart=Never busybox --image=busybox -- nslookup kubernetes.default
 ```
 
+In case you need shell, use this to make a pod in a loop.
+```
+k run tester --image=busybox -- sh -c "while true; do echo 'running..'; sleep 10; done;"
+```
+
 Events tell you what happened.
 ```
 # List Events sorted by timestamp
