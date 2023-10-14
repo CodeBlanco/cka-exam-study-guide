@@ -247,3 +247,62 @@ List each ingress and the corresponding ingress class
 kubectl get ingress -A
 ```
 
+## ConfigMap
+
+This creates a config map
+```
+kubectl apply -f - << EOF
+apiVersion: v1
+kind: ConfigMap
+data:
+  index.html: |+
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Hello World</title>
+    </head>
+    <body>
+        <h1>Hello from Kubernetes!</h1>
+    </body>
+    </html>
+metadata:
+  name: web-content
+  namespace: default
+EOF
+```
+
+Now use it in a pod (notice it mounts on just like any volume would)
+```
+kubctl apply -f - << EOF
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-pod
+  labels:
+    app: nginx
+spec:
+  containers:
+  - name: nginx
+    image: nginx:1.17.10
+    ports:
+    - containerPort: 80
+    volumeMounts:
+    - name: web-content-volume
+      mountPath: /usr/share/nginx/html
+  volumes:
+  - name: web-content-volume
+    configMap:
+      name: web-content
+EOF
+```
+
+Make it a service and try it out (node port)
+```
+k expose pod nginx-pod --type=NodePort --port=80
+k get nodes -owide # get the node ip
+k get svc # get the port
+curl <NODE_IP>:<NODE_PORT> # you can see the web page
+```
+
+
+
