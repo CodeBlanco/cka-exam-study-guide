@@ -13,7 +13,7 @@ Basically, there is a Github Action Pipeline that can apply/plan/destroy AWS ins
 
 So after the pipeline creates the instances, you SSH in, create a cluster, join some nodes, practice some kubernetes, pass the CKA exam. 
 
-The yaml files in the `templates` directory are examples meant to be practiced for the exam. Below are some handy commands.
+The yaml files in the `templates` directory are examples meant to be practiced for the exam. Below are some handy commands. It is not enough to cover everything on the exam, it is mostly fixated on the topics I want to re-encforce for my personal success at the exam. 
 
 
 ## Config
@@ -47,6 +47,12 @@ systemctl status containerd # or whatever container run time
 journalctl -u containerd 
 ```
 
+Logs on deployments
+```
+kubectl logs deploy/my-deployment                         # dump Pod logs for a Deployment (single-container case)
+kubectl logs deploy/my-deployment -c my-container         # dump Pod logs for a Deployment (multi-container case)
+```
+
 Create a pod, have it do one thing, then go away...
 In this case it does nslookup on a pod name.
 ```
@@ -62,12 +68,6 @@ kubectl events --types=Warning
 ```
 
 
-
-See the hardware specs for a node (conditions are checks for Ready status)
-```
-kubectl describe nodes | grep -A5 Allocatable # "Conditions" is another good search term+
-# you can also use "Taint" as search term
-```
 ### Top
 Top is a classic command
 ```
@@ -110,12 +110,20 @@ kubectl get configmaps, secrets -n ns
 ```
 # Show labels for all pods (or any other Kubernetes object that supports labelling)
 kubectl get pods --show-labels
+# Select by a label
+kubectl get pods -l app=myapp
 ```
 
 ```
 # Get the version label of all pods with label app=cassandra
 kubectl get pods --selector=app=cassandra -o \
   jsonpath='{.items[*].metadata.labels.version}'
+```
+
+To add and remove labels
+```
+kubectl label <resource-type> <resource-name> key1=value1 key2=value2
+kubectl label pod testpod key1-
 ```
 
 ## Services
@@ -162,8 +170,21 @@ kubectl run my-pod --image=my-image --port=80 --overrides='{
 
 Taints and Tolerations, then Affinities are two other ways you can assign pods to nodes, however, nodeSelector seems the most straight-forward. 
 
+See the hardware specs for a node (conditions are checks for Ready status)
+```
+kubectl describe nodes | grep -A5 Allocatable # "Conditions" is another good search term+
+# you can also use "Taint" as search term
+```
 
-
+Engaging with Nodes
+```
+kubectl cordon my-node                                                # Mark my-node as unschedulable
+kubectl drain my-node                                                 # Drain my-node in preparation for maintenance
+kubectl uncordon my-node                                              # Mark my-node as schedulable
+kubectl top node my-node                                              # Show metrics for a given node
+kubectl cluster-info                                                  # Display addresses of the master and services
+kubectl cluster-info dump                                             # Dump current cluster state to stdout
+```
 ## Ingress
 
 Create a template
