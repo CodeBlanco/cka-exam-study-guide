@@ -15,6 +15,8 @@ So after the pipeline creates the instances, you SSH in, create a cluster, join 
 
 The yaml files in the `templates` directory are examples meant to be practiced for the exam. Below are some handy commands. It is not enough to cover everything on the exam, it is mostly fixated on the topics I want to re-encforce for my personal success at the exam. 
 
+- In the end, setting up k8s from scratch was successfull but these example below work better on minikube.
+
 
 ## Config
 
