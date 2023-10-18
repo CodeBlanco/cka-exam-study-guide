@@ -1,0 +1,109 @@
+# k create ns zoo
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    app: zoo-web
+  name: zoo-web
+  namespace: zoo
+spec:
+  containers:
+  - image: nginx
+    name: zoo-web
+    resources: {} 
+    ports:
+      - containerPort: 80
+        name: http
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+---
+
+# TODO - config map for nginx config
+
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    app: private-zoo
+  name: private-zoo
+  namespace: zoo
+spec:
+  containers:
+  - image: nginx
+    name: private-web
+    resources: {} 
+    ports:
+      - containerPort: 80
+        name: http
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    app: zoo-web
+  name: zoo-tester
+  namespace: zoo
+spec:
+  containers:
+  - image: busybox
+    name: zoo-tester
+    command: ["/bin/sh", "-c", "while true; do wget zoo-svc; sleep 5; done;"]
+    resources: {} 
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: zoo-svc-nodeport
+  namespace: zoo
+spec:
+  type: NodePort
+  selector:
+    app: zoo-web
+  ports:
+  - name: http-svc
+    protocol: TCP
+    port: 80
+    targetPort: http
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: zoo-svc
+  namespace: zoo
+spec:
+  type: ClusterIP
+  selector:
+    app: zoo-web
+  ports:
+  - name: http-svc
+    protocol: TCP
+    port: 80
+    targetPort: http
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: private-svc
+  namespace: zoo
+spec:
+  type: ClusterIP
+  selector:
+    app: private-zoo
+  ports:
+  - name: private-http
+    protocol: TCP
+    port: 8080
+    targetPort: http

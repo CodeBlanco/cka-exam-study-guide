@@ -1,0 +1,77 @@
+# sudo mkdir /data
+# sudo mkdir /hostpath
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    app: customers
+  name: customers
+  namespace: teams
+spec:
+  containers:
+  - image: busybox
+    command:
+      - "/bin/sh"
+      - "-c"
+      - "while true; do 
+        wget zoo-svc.zoo.svc.cluster.local && echo 'WRONG' || echo 'CORRECT: '; sleep 5; 
+        done;"
+    name: feeders
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    app: feeders
+  name: feeders
+  namespace: teams
+spec:
+  containers:
+  - image: busybox
+    name: connector
+    command:
+      - "/bin/sh"
+      - "-c"
+      - "while true; do 
+         wget zoo-svc.zoo.svc.cluster.local && echo 'CORRECT connector reached service' >> /emptydir/out.txt; sleep 5; 
+        done;"
+    volumeMounts:
+      - mountPath: "/emptydir"
+        name: emptydir-volume
+  - image: busybox
+    name: writer
+    command:
+      - "/bin/sh"
+      - "-c"
+      - "while true; do
+          wget zoo-svc.zoo.svc.cluster.local && echo 'CORRECT' >> data/out; sleep 5; 
+          cat /emptydir/out.txt >> /hostpath/out || true; sleep 5; 
+          done;
+        "
+    resources: {}
+    volumeMounts:
+      - mountPath: "/data"
+        name: local-volume
+      - mountPath: "/hostpath"
+        name: hostpath-volume
+      - mountPath: "/emptydir"
+        name: emptydir-volume
+  volumes:
+    - name: local-volume
+      persistentVolumeClaim:
+        claimName: local-pvc
+    - name: hostpath-volume
+      hostPath:
+        type: Directory
+        path: "/hostpath"
+    - name: emptydir-volume
+      emptyDir:
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}

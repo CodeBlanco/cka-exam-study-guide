@@ -1,0 +1,18 @@
+# k create ns test
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: testpod
+  name: testpod
+  namespace: test
+spec:
+  containers:
+  - image: busybox
+    name: testpod
+    command: ["/bin/sh", "-c", "while true; do echo running; sleep 5; done;"]
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}

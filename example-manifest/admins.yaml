@@ -1,0 +1,27 @@
+# first create the namespace
+# k create ns admins
+
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: adminpod
+  name: adminpod
+  namespace: admins
+spec:
+  containers:
+  - image: busybox
+    name: adminpod
+    command:
+      - "/bin/sh"
+      - "-c"
+      - "
+        while true; do
+        echo hello; sleep 5;
+        done;
+        "
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
